@@ -31,12 +31,12 @@ clickButton.addEventListener("click", function () {
 
 const sleepData = [
   { name: "Mon", hours: 10 },
-  { name: "Tue", hours: 5 },
-  { name: "Wed", hours: 8 },
-  { name: "Thu", hours: 6 },
-  { name: "Fri", hours: 10 },
-  { name: "Sat", hours: 9 },
-  { name: "Sun", hours: 8 }
+  { name: "Tue", hours: 9 },
+  { name: "Wed", hours: 10 },
+  { name: "Thu", hours: 11 },
+  { name: "Fri", hours: 7 },
+  { name: "Sat", hours: 5 },
+  { name: "Sun", hours: 7 }
 ];
 
 const chart = document.getElementById("chart");
