@@ -33,7 +33,7 @@ body {
   font-size: 17px;
   line-height: 1.6;
   color: var(--ink);
-  background-color: var(--paper);
+  background-color: #FFCCE1;
 }
 
 /* Keep the content from stretching too wide on large monitors. */
@@ -61,7 +61,7 @@ h2 {
 code {
   font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   font-size: 0.88em;
-  background-color: #ca0adf;
+  background-color: #A973FA;
   padding: 0.12em 0.4em;
   border-radius: 4px;
 }
