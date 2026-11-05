@@ -18,7 +18,7 @@ const clickButton = document.getElementById("clickButton");
 
 // When the button is clicked, open the link.
 clickButton.addEventListener("click", function () {
-  window.open("https://www.youtube.com/watch?v=XbmvRfaufeE&t=3s", "_blank");
+  window.open("https://www.youtube.com/watch?v=vLX3-MrBXFk", "_blank");
 });
 
 
