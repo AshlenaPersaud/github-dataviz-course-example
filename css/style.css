@@ -10,8 +10,8 @@
   --accent:      #B688FC;   /* buttons, bars, links */
   --accent-dark: #914DF7;   /* hover state */
   --ink:         #00495E;   /* body text */
-  --ink-muted:   #9CE6FF;   /* captions, secondary text */
-  --paper:       #CC9FB7;   /* page background */
+  --ink-muted:   #5dd5fd;   /* captions, secondary text */
+  --paper:       #cf78a7;   /* page background */
   --card:        #FCF2F2;   /* card background */
   --line:        #e2e0da;   /* borders */
   --radius:      10px;
