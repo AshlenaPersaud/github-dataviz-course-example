@@ -7,8 +7,8 @@
    =================================================================== */
 
 :root {
-  --accent:      #2f6f4e;   /* buttons, bars, links */
-  --accent-dark: #235539;   /* hover state */
+  --accent:      #B688FC;   /* buttons, bars, links */
+  --accent-dark: #914DF7;   /* hover state */
   --ink:         #00495E;   /* body text */
   --ink-muted:   #9CE6FF;   /* captions, secondary text */
   --paper:       #CC9FB7;   /* page background */
