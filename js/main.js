@@ -15,21 +15,10 @@
 
 // Find the two elements we care about, using the id="" from index.html.
 const clickButton = document.getElementById("clickButton");
-const clickOutput = document.getElementById("clickOutput");
 
-// A place to remember how many times the button has been clicked.
-let clickCount = 0;
-
-// "When the button is clicked, run this function."
+// When the button is clicked, open the link.
 clickButton.addEventListener("click", function () {
-  clickCount = clickCount + 1;
-
-  // Change the text inside the <span>.
-  if (clickCount === 1) {
-    clickOutput.textContent = "1 click";
-  } else {
-    clickOutput.textContent = clickCount + " clicks";
-  }
+  window.open("https://www.youtube.com/watch?v=XbmvRfaufeE&t=3s", "_blank");
 });
 
 
