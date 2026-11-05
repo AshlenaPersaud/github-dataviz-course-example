@@ -29,21 +29,21 @@ clickButton.addEventListener("click", function () {
    Swap in your own names and numbers and the chart redraws itself.
    ------------------------------------------------------------------- */
 
-const coffeeData = [
-  { name: "Mon", cups: 14 },
-  { name: "Tue", cups: 9 },
-  { name: "Wed", cups: 21 },
-  { name: "Thu", cups: 17 },
-  { name: "Fri", cups: 26 },
-  { name: "Sat", cups: 5 },
-  { name: "Sun", cups: 3 }
+const sleepData = [
+  { name: "Mon", hours: 10 },
+  { name: "Tue", hours: 5 },
+  { name: "Wed", hours: 8 },
+  { name: "Thu", hours: 6 },
+  { name: "Fri", hours: 10 },
+  { name: "Sat", hours: 9 },
+  { name: "Sun", hours: 8 }
 ];
 
 const chart = document.getElementById("chart");
 
 /**
  * Draw the chart.
- * @param {Array} data - array of { name, cups } objects
+ * @param {Array} data - array of { name, hours } objects
  */
 function drawChart(data) {
   // Start from an empty container so we do not stack bars on top of
@@ -52,11 +52,11 @@ function drawChart(data) {
 
   // The largest value in the data. Every bar is measured against this,
   // so the biggest bar fills 100% of the available width.
-  const maxValue = Math.max(...data.map(d => d.cups));
+  const maxValue = Math.max(...data.map(d => d.hours));
 
   // Build one row per item in the data.
   data.forEach(function (d) {
-    const percent = (d.cups / maxValue) * 100;
+    const percent = (d.hours / maxValue) * 100;
 
     const row = document.createElement("div");
     row.className = "bar-row";
@@ -66,7 +66,7 @@ function drawChart(data) {
     row.innerHTML = `
       <span class="bar-label">${d.name}</span>
       <div class="bar" style="width: ${percent}%"></div>
-      <span class="bar-value">${d.cups}</span>
+      <span class="bar-value">${d.hours}</span>
     `;
 
     chart.appendChild(row);
@@ -74,7 +74,7 @@ function drawChart(data) {
 }
 
 // Draw the chart once, as soon as the page loads.
-drawChart(coffeeData);
+drawChart(sleepData);
 
 
 /* -------------------------------------------------------------------
@@ -92,11 +92,11 @@ sortButton.addEventListener("click", function () {
 
   if (isSorted) {
     // .slice() makes a copy first, so the original array is untouched.
-    const sortedData = coffeeData.slice().sort((a, b) => b.cups - a.cups);
+    const sortedData = sleepData.slice().sort((a, b) => b.hours - a.hours);
     drawChart(sortedData);
     sortButton.textContent = "Back to day order";
   } else {
-    drawChart(coffeeData);
+    drawChart(sleepData);
     sortButton.textContent = "Sort by value";
   }
 });
@@ -107,4 +107,4 @@ sortButton.addEventListener("click", function () {
    Inspect -> Console) to see this message and any errors in your code.
    ------------------------------------------------------------------- */
 
-console.log("main.js loaded. The chart has " + coffeeData.length + " bars.");
+console.log("main.js loaded. The chart has " + sleepData.length + " bars.");
