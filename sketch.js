@@ -5,7 +5,7 @@ function setup() {
 }
 
 function draw() {
-  background(255, 225, 230);
+  background(252, 242, 242);
 
   // Colors
   let rosePink = color(232, 100, 168);
