@@ -210,3 +210,21 @@ code {
     grid-template-columns: 72px 1fr 36px;
   }
 }
+
+.question-card {
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.question-card h3 {
+  margin-top: 0;
+}
+
+details summary {
+  cursor: pointer;
+  color: #0056b3;
+  margin-top: 0.5rem;
+}
