@@ -5,13 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HW 11/12 - Mythology Trivia</title>
 
-  <!-- Points inside your css/ folder -->
+  <!-- Points to css/style.css -->
   <link rel="stylesheet" href="css/style.css">
 
-  <!-- Points directly to apiapp.js in your main folder -->
-  <script src="apiapp.js" defer></script>
-
-  <link rel="preconnect" href="https://opentdb.com">
+  <!-- Points inside your js/ folder to js/apiapp.js -->
+  <script src="js/apiapp.js" defer></script>
 </head>
 <body>
 
@@ -27,12 +25,6 @@
   <main>
     <!-- Live Scoreboard Card -->
     <section class="card scoreboard" aria-live="polite">
-
-        <!-- Container where question cards are injected -->
-        <div id="api-output" aria-live="polite">
-            <div class="card"><p>Loading trivia questions...</p></div>
-        </div>
-
       <div class="score-stats">
         <span class="score-pill right">Right: <strong id="right-count">0</strong></span>
         <span class="score-pill wrong">Wrong: <strong id="wrong-count">0</strong></span>
@@ -41,7 +33,11 @@
       <button id="reload-btn" class="button" type="button">Load New Questions</button>
     </section>
 
-      </main>
+    <!-- Container where question cards are injected -->
+    <div id="api-output" aria-live="polite">
+      <div class="card"><p>Loading trivia questions...</p></div>
+    </div>
+  </main>
 
   <footer class="site-footer">
     <p>
