@@ -1,16 +1,18 @@
 // #region Configuration & DOM References
+// Open Trivia DB Mythology endpoint (10 medium multiple-choice questions)
+const API_URL = 'https://opentdb.com';
+
 const outputContainer = document.getElementById('api-output');
 const rightCountEl = document.getElementById('right-count');
 const wrongCountEl = document.getElementById('wrong-count');
 const answeredCountEl = document.getElementById('answered-count');
-const categorySelect = document.getElementById('category-select');
 const reloadBtn = document.getElementById('reload-btn');
 
 let rightScore = 0;
 let wrongScore = 0;
 let answeredCount = 0;
 
-// Built-in backup Mythology questions (used ONLY if the live API cannot be reached)
+// Built-in backup Mythology questions (used ONLY if the live API fails or times out)
 const FALLBACK_QUESTIONS = [
   {
     question: "The Hippogriff, not to be confused with the Griffon, is a magical creature with the front half of an eagle, and the back half of what?",
@@ -66,12 +68,18 @@ const FALLBACK_QUESTIONS = [
 // #endregion
 
 // #region Helper Functions
+/**
+ * Decodes HTML entities (like &quot; and &#039;) from Open Trivia DB.
+ */
 function decodeHTML(html) {
   const txt = document.createElement('textarea');
   txt.innerHTML = html;
   return txt.value;
 }
 
+/**
+ * Resets Right, Wrong, and Answered counts to zero.
+ */
 function resetScoreboard() {
   rightScore = 0;
   wrongScore = 0;
@@ -79,33 +87,50 @@ function resetScoreboard() {
   updateScoreboard();
 }
 
+/**
+ * Updates the scoreboard numbers on screen.
+ */
 function updateScoreboard() {
   rightCountEl.textContent = rightScore;
   wrongCountEl.textContent = wrongScore;
   answeredCountEl.textContent = answeredCount;
 }
+
+/**
+ * Adds a 5-second cooldown to the reload button to respect Open Trivia DB's rate limit.
+ */
+function startButtonCooldown(seconds = 5) {
+  let remaining = seconds;
+  reloadBtn.disabled = true;
+  reloadBtn.textContent = `Wait ${remaining}s...`;
+
+  const timer = setInterval(() => {
+    remaining--;
+    if (remaining > 0) {
+      reloadBtn.textContent = `Wait ${remaining}s...`;
+    } else {
+      clearInterval(timer);
+      reloadBtn.disabled = false;
+      reloadBtn.textContent = 'Load New Questions';
+    }
+  }, 1000);
+}
 // #endregion
 
 // #region API Fetch Logic
 /**
- * Fetches 10 live questions for the selected category from Open Trivia DB.
+ * Fetches 10 live Mythology questions from Open Trivia DB.
  */
 async function fetchTriviaQuestions() {
   resetScoreboard();
-
-  const selectedCategoryId = categorySelect.value;
-  const selectedCategoryName = categorySelect.options[categorySelect.selectedIndex].text;
-  const apiUrl = `https://opentdb.com{selectedCategoryId}&difficulty=medium&type=multiple`;
-
-  outputContainer.innerHTML = `<div class="card"><p>Loading 10 ${selectedCategoryName} questions...</p></div>`;
+  outputContainer.innerHTML = '<div class="card"><p>Loading Mythology questions...</p></div>';
   reloadBtn.disabled = true;
-  categorySelect.disabled = true;
 
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 15000);
 
   try {
-    const response = await fetch(apiUrl, { signal: controller.signal });
+    const response = await fetch(API_URL, { signal: controller.signal });
     clearTimeout(timeoutId);
 
     if (response.status === 429) {
@@ -122,24 +147,27 @@ async function fetchTriviaQuestions() {
       throw new Error(`API response_code: ${data.response_code}`);
     }
 
-    renderQuestions(data.results, `Live API • ${selectedCategoryName}`);
+    renderQuestions(data.results);
+    startButtonCooldown(5);
 
   } catch (error) {
     clearTimeout(timeoutId);
-    console.error('Live API failed, reason:', error);
+    console.warn('Live API unavailable, using built-in Mythology questions:', error.message);
 
     const shuffledFallback = [...FALLBACK_QUESTIONS].sort(() => Math.random() - 0.5);
-    renderQuestions(shuffledFallback, `Offline Backup • Mythology (${error.message})`);
-  } finally {
+    renderQuestions(shuffledFallback);
     reloadBtn.disabled = false;
-    categorySelect.disabled = false;
+    reloadBtn.textContent = 'Load New Questions';
   }
 }
 // #endregion
 
 // #region Interactive Card Rendering
-function renderQuestions(questions, sourceLabel) {
-  outputContainer.innerHTML = `<p class="caption">Source: <strong>${sourceLabel}</strong></p>`;
+/**
+ * Renders each Mythology question as an interactive card with clickable answer buttons.
+ */
+function renderQuestions(questions) {
+  outputContainer.innerHTML = '';
 
   questions.forEach((item, index) => {
     const card = document.createElement('section');
@@ -149,6 +177,7 @@ function renderQuestions(questions, sourceLabel) {
     const correctText = decodeHTML(item.correct_answer);
     const allAnswers = [...item.incorrect_answers.map(decodeHTML), correctText];
 
+    // Shuffle answer buttons randomly
     allAnswers.sort(() => Math.random() - 0.5);
 
     card.innerHTML = `
@@ -168,6 +197,7 @@ function renderQuestions(questions, sourceLabel) {
       btn.textContent = answerText;
 
       btn.addEventListener('click', () => {
+        // Lock card after first pick
         if (card.dataset.answered === 'true') return;
         card.dataset.answered = 'true';
         answeredCount++;
@@ -207,9 +237,8 @@ function renderQuestions(questions, sourceLabel) {
 // #endregion
 
 // #region Event Listeners & Initialization
-categorySelect.addEventListener('change', fetchTriviaQuestions);
 reloadBtn.addEventListener('click', fetchTriviaQuestions);
 
-// Automatically load questions when HW1112.html opens
+// Automatically load Mythology questions when HW1112.html opens
 fetchTriviaQuestions();
 // #endregion
