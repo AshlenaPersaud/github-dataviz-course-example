@@ -376,3 +376,34 @@ code {
     grid-template-columns: 72px 1fr 36px;
   }
 }
+.quiz-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.category-select {
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink);
+  background-color: #ffffff;
+  border: 2px solid var(--accent);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+}
+
+.category-select:focus {
+  outline: none;
+  border-color: var(--accent-dark);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}
