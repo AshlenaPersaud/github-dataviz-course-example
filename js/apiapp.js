@@ -1,18 +1,16 @@
 // #region Configuration & DOM References
-const API_URL = 'https://opentdb.com/api.php?amount=10&category=20&difficulty=medium&type=multiple';
-
 const outputContainer = document.getElementById('api-output');
 const rightCountEl = document.getElementById('right-count');
 const wrongCountEl = document.getElementById('wrong-count');
 const answeredCountEl = document.getElementById('answered-count');
+const categorySelect = document.getElementById('category-select');
 const reloadBtn = document.getElementById('reload-btn');
 
 let rightScore = 0;
 let wrongScore = 0;
 let answeredCount = 0;
 
-// Built-in backup questions (from your Open Trivia DB dataset)
-// Automatically used if the live API is blocked, rate-limited, or offline.
+// Built-in backup Mythology questions (used ONLY if the live API cannot be reached)
 const FALLBACK_QUESTIONS = [
   {
     question: "The Hippogriff, not to be confused with the Griffon, is a magical creature with the front half of an eagle, and the back half of what?",
@@ -90,20 +88,29 @@ function updateScoreboard() {
 
 // #region API Fetch Logic
 /**
- * Attempts to fetch 10 live questions from Open Trivia DB.
- * Falls back smoothly to the built-in Mythology set if the network request fails.
+ * Fetches 10 live questions for the selected category from Open Trivia DB.
  */
 async function fetchTriviaQuestions() {
   resetScoreboard();
-  outputContainer.innerHTML = '<div class="card"><p>Loading trivia questions...</p></div>';
+
+  const selectedCategoryId = categorySelect.value;
+  const selectedCategoryName = categorySelect.options[categorySelect.selectedIndex].text;
+  const apiUrl = `https://opentdb.com{selectedCategoryId}&difficulty=medium&type=multiple`;
+
+  outputContainer.innerHTML = `<div class="card"><p>Loading 10 ${selectedCategoryName} questions...</p></div>`;
   reloadBtn.disabled = true;
+  categorySelect.disabled = true;
 
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 5000);
+  const timeoutId = setTimeout(() => controller.abort(), 15000);
 
   try {
-    const response = await fetch(API_URL, { signal: controller.signal });
+    const response = await fetch(apiUrl, { signal: controller.signal });
     clearTimeout(timeoutId);
+
+    if (response.status === 429) {
+      throw new Error('Rate limited (HTTP 429). Wait 5 seconds before loading again.');
+    }
 
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
@@ -112,27 +119,27 @@ async function fetchTriviaQuestions() {
     const data = await response.json();
 
     if (data.response_code !== 0 || !data.results) {
-      throw new Error(`API returned response code: ${data.response_code}`);
+      throw new Error(`API response_code: ${data.response_code}`);
     }
 
-    renderQuestions(data.results);
+    renderQuestions(data.results, `Live API • ${selectedCategoryName}`);
 
   } catch (error) {
     clearTimeout(timeoutId);
-    console.warn('Live API unavailable, using built-in Mythology questions:', error.message);
+    console.error('Live API failed, reason:', error);
 
-    // Shuffle a copy of the fallback questions so reloading still feels fresh
     const shuffledFallback = [...FALLBACK_QUESTIONS].sort(() => Math.random() - 0.5);
-    renderQuestions(shuffledFallback);
+    renderQuestions(shuffledFallback, `Offline Backup • Mythology (${error.message})`);
   } finally {
     reloadBtn.disabled = false;
+    categorySelect.disabled = false;
   }
 }
 // #endregion
 
 // #region Interactive Card Rendering
-function renderQuestions(questions) {
-  outputContainer.innerHTML = '';
+function renderQuestions(questions, sourceLabel) {
+  outputContainer.innerHTML = `<p class="caption">Source: <strong>${sourceLabel}</strong></p>`;
 
   questions.forEach((item, index) => {
     const card = document.createElement('section');
@@ -142,7 +149,6 @@ function renderQuestions(questions) {
     const correctText = decodeHTML(item.correct_answer);
     const allAnswers = [...item.incorrect_answers.map(decodeHTML), correctText];
 
-    // Shuffle answer choices
     allAnswers.sort(() => Math.random() - 0.5);
 
     card.innerHTML = `
@@ -201,8 +207,9 @@ function renderQuestions(questions) {
 // #endregion
 
 // #region Event Listeners & Initialization
+categorySelect.addEventListener('change', fetchTriviaQuestions);
 reloadBtn.addEventListener('click', fetchTriviaQuestions);
 
-// Automatically load questions on page open
+// Automatically load questions when HW1112.html opens
 fetchTriviaQuestions();
 // #endregion
