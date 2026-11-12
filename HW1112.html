@@ -7,21 +7,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>API Linkage Starter</title>
+  <title>HW 11/12 - Mythology Trivia</title>
   <link rel="stylesheet" href="styles.css">
   <script src="apiapp.js" defer></script>
 </head>
 <body>
 
+  <nav>
+    <a href="index.html">&larr; Back to Home</a>
+  </nav>
+
   <header>
-    <h1>API Data Loader</h1>
-    <p>Click the button below to fetch data from an external API.</p>
+    <h1>Mythology Trivia (Medium)</h1>
+    <p>10 multiple-choice questions loaded automatically from Open Trivia DB.</p>
   </header>
 
   <main>
-    <button id="load-btn" type="button">Fetch Data</button>
     <div id="api-output" aria-live="polite">
-      <p>No data loaded yet.</p>
+      <p>Loading trivia questions...</p>
     </div>
   </main>
 
