@@ -18,13 +18,19 @@
   </nav>
 
   <header class="site-header">
-    <h1>Mythology Trivia (Medium)</h1>
-    <p class="subtitle">Click an answer on each card to test your knowledge.</p>
+    <h1>How well do you know your Mythology?</h1>
+    <p class="subtitle">A couple questions to test your knowledge.</p>
   </header>
 
   <main>
     <!-- Live Scoreboard Card -->
     <section class="card scoreboard" aria-live="polite">
+
+        <!-- Container where question cards are injected -->
+        <div id="api-output" aria-live="polite">
+            <div class="card"><p>Loading trivia questions...</p></div>
+        </div>
+
       <div class="score-stats">
         <span class="score-pill right">Right: <strong id="right-count">0</strong></span>
         <span class="score-pill wrong">Wrong: <strong id="wrong-count">0</strong></span>
@@ -33,11 +39,7 @@
       <button id="reload-btn" class="button" type="button">Load New Questions</button>
     </section>
 
-    <!-- Container where question cards are injected -->
-    <div id="api-output" aria-live="polite">
-      <div class="card"><p>Loading trivia questions...</p></div>
-    </div>
-  </main>
+      </main>
 
   <footer class="site-footer">
     <p>
