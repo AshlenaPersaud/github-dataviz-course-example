@@ -1,3 +1,208 @@
+/* ===================================================================
+   css/style.css
+   Complete unified stylesheet for index.html and HW1112.html
+   =================================================================== */
+
+:root {
+  --accent:      #CEB6FA;   /* buttons, bars, links */
+  --accent-dark: #914DF7;   /* hover state */
+  --ink:         #00495E;   /* body text */
+  --ink-muted:   #016181;   /* captions, secondary text */
+  --paper:       #cf78a7;   /* secondary accent */
+  --card:        #FCF2F2;   /* card background */
+  --line:        #e2e0da;   /* borders */
+  --radius:      10px;
+}
+
+/* ------------------------------------------------------------------
+   Base
+   ------------------------------------------------------------------ */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 2rem 1.25rem 3rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+               Helvetica, Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink);
+  background-color: #FFCCE1;
+}
+
+nav,
+header,
+main,
+footer {
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+nav {
+  margin-bottom: 1.25rem;
+}
+
+nav a {
+  text-decoration: none;
+  color: var(--ink-muted);
+  font-weight: 600;
+}
+
+nav a:hover {
+  color: var(--accent-dark);
+  text-decoration: underline;
+}
+
+h1, h2, h3 {
+  line-height: 1.25;
+  margin-top: 0;
+  color: #217896;
+}
+
+h1 {
+  font-size: 2.1rem;
+}
+
+h2 {
+  font-size: 1.3rem;
+}
+
+code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.88em;
+  background-color: var(--accent);
+  padding: 0.12em 0.4em;
+  border-radius: 4px;
+}
+
+/* ------------------------------------------------------------------
+   Header and footer
+   ------------------------------------------------------------------ */
+
+.site-header {
+  margin-bottom: 2rem;
+}
+
+.subtitle {
+  color: var(--ink-muted);
+  margin-bottom: 0;
+}
+
+.site-footer {
+  margin-top: 2.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+  color: var(--ink-muted);
+  font-size: 0.9rem;
+}
+
+/* ------------------------------------------------------------------
+   Cards
+   ------------------------------------------------------------------ */
+
+.card {
+  background-color: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.caption {
+  color: var(--ink-muted);
+  font-size: 0.9rem;
+  margin-bottom: 0;
+}
+
+/* ------------------------------------------------------------------
+   Buttons
+   ------------------------------------------------------------------ */
+
+.button {
+  display: inline-block;
+  text-decoration: none;
+  font: inherit;
+  font-weight: 600;
+  color: var(--ink);
+  background-color: var(--accent);
+  border: none;
+  border-radius: 6px;
+  padding: 0.55rem 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.button:hover {
+  background-color: var(--accent-dark);
+  color: #ffffff;
+}
+
+.button-secondary {
+  color: var(--accent-dark);
+  background-color: transparent;
+  border: 1px solid var(--accent);
+}
+
+.button-secondary:hover {
+  color: #ffffff;
+  background-color: var(--accent);
+}
+
+.counter-row {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+}
+
+.counter-output {
+  color: var(--ink-muted);
+}
+
+/* ------------------------------------------------------------------
+   Bar chart
+   ------------------------------------------------------------------ */
+
+.chart-controls {
+  margin-bottom: 1.1rem;
+}
+
+.chart {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: 90px 1fr 42px;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.bar-label {
+  font-size: 0.9rem;
+  text-align: right;
+  color: var(--ink-muted);
+}
+
+.bar {
+  height: 22px;
+  border-radius: 3px;
+  background-color: var(--accent);
+  transition: width 0.4s ease;
+}
+
+.bar-value {
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
+
 /* ------------------------------------------------------------------
    Trivia Scoreboard & Interactive Cards (HW 11/12)
    ------------------------------------------------------------------ */
@@ -153,16 +358,21 @@
   border-radius: var(--radius);
 }
 
-.button {
-  display: inline-block;
-  text-decoration: none;
-  font: inherit;
-  font-weight: 600;
-  color: var(--ink);
-  background-color: var(--accent);
-  border: none;
-  border-radius: 6px;
-  padding: 0.55rem 1.1rem;
-  cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease;
+/* ------------------------------------------------------------------
+   Small screens
+   ------------------------------------------------------------------ */
+
+@media (max-width: 480px) {
+  body {
+    font-size: 16px;
+    padding: 1.5rem 1rem 2rem;
+  }
+
+  h1 {
+    font-size: 1.7rem;
+  }
+
+  .bar-row {
+    grid-template-columns: 72px 1fr 36px;
+  }
 }
