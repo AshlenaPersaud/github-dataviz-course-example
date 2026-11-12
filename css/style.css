@@ -152,3 +152,17 @@
   padding: 1rem;
   border-radius: var(--radius);
 }
+
+.button {
+  display: inline-block;
+  text-decoration: none;
+  font: inherit;
+  font-weight: 600;
+  color: var(--ink);
+  background-color: var(--accent);
+  border: none;
+  border-radius: 6px;
+  padding: 0.55rem 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
