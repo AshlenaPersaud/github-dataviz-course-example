@@ -1,213 +1,45 @@
-/* ===================================================================
-   style.css
-   Styles for the GitHub Pages starter project.
-
-   CSS custom properties ("variables") are defined once here and reused
-   everywhere below. Change a value here and it updates the whole page.
-   =================================================================== */
-
-:root {
-  --accent:      #CEB6FA;   /* buttons, bars, links */
-  --accent-dark: #914DF7;   /* hover state */
-  --ink:         #00495E;   /* body text */
-  --ink-muted:   #016181;   /* captions, secondary text */
-  --paper:       #cf78a7;   /* page background */
-  --card:        #FCF2F2;   /* card background */
-  --line:        #e2e0da;   /* borders */
-  --radius:      10px;
-}
-
 /* ------------------------------------------------------------------
-   Base
+   Trivia Scoreboard & Interactive Cards (HW 11/12)
    ------------------------------------------------------------------ */
 
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  padding: 2rem 1.25rem 3rem;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-               Helvetica, Arial, sans-serif;
-  font-size: 17px;
-  line-height: 1.6;
-  color: var(--ink);
-  background-color: #FFCCE1;
-}
-
-/* Keep the content from stretching too wide on large monitors. */
-nav,
-header,
-main,
-footer {
-  max-width: 720px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-nav {
-  margin-bottom: 1.25rem;
-}
-
-nav a {
-  text-decoration: none;
-  color: var(--ink-muted);
-  font-weight: 600;
-}
-
-nav a:hover {
-  color: var(--accent-dark);
-  text-decoration: underline;
-}
-
-h1, h2, h3 {
-  line-height: 1.25;
-  margin-top: 0;
-  color: #217896;
-}
-
-h1 {
-  font-size: 2.1rem;
-}
-
-h2 {
-  font-size: 1.3rem;
-}
-
-code {
-  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  font-size: 0.88em;
-  background-color: var(--accent);
-  padding: 0.12em 0.4em;
-  border-radius: 4px;
-}
-
-/* ------------------------------------------------------------------
-   Header and footer
-   ------------------------------------------------------------------ */
-
-.site-header {
-  margin-bottom: 2rem;
-}
-
-.subtitle {
-  color: var(--ink-muted);
-  margin-bottom: 0;
-}
-
-.site-footer {
-  margin-top: 2.5rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid var(--line);
-  color: var(--ink-muted);
-  font-size: 0.9rem;
-}
-
-/* ------------------------------------------------------------------
-   Cards
-   ------------------------------------------------------------------ */
-
-.card {
-  background-color: var(--card);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 1.5rem;
-  margin-bottom: 1.25rem;
-}
-
-.caption {
-  color: var(--ink-muted);
-  font-size: 0.9rem;
-  margin-bottom: 0;
-}
-
-/* ------------------------------------------------------------------
-   Buttons
-   ------------------------------------------------------------------ */
-
-.button {
-  font: inherit;
-  font-weight: 600;
-  color: #51a7c4;
-  background-color: var(--accent);
-  border: none;
-  border-radius: 6px;
-  padding: 0.55rem 1.1rem;
-  cursor: pointer;
-  transition: background-color 0.15s ease;
-}
-
-.button:hover {
-  background-color: var(--accent-dark);
-  color: #ffffff;
-}
-
-.button-secondary {
-  color: var(--accent-dark);
-  background-color: transparent;
-  border: 1px solid var(--accent);
-}
-
-.button-secondary:hover {
-  color: #ffffff;
-  background-color: var(--accent);
-}
-
-.counter-row {
+.scoreboard {
   display: flex;
   align-items: center;
-  gap: 0.9rem;
+  justify-content: space-between;
   flex-wrap: wrap;
+  gap: 1rem;
+  position: sticky;
+  top: 0.75rem;
+  z-index: 10;
+  box-shadow: 0 6px 16px rgba(0, 73, 94, 0.12);
 }
 
-.counter-output {
-  color: var(--ink-muted);
-}
-
-/* ------------------------------------------------------------------
-   Bar chart
-   ------------------------------------------------------------------ */
-
-.chart-controls {
-  margin-bottom: 1.1rem;
-}
-
-.chart {
+.score-stats {
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.6rem;
 }
 
-.bar-row {
-  display: grid;
-  grid-template-columns: 90px 1fr 42px;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.bar-label {
+.score-pill {
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
   font-size: 0.9rem;
-  text-align: right;
-  color: var(--ink-muted);
+  font-weight: 600;
+  background-color: #ffffff;
+  border: 1px solid var(--line);
 }
 
-.bar {
-  height: 22px;
-  border-radius: 3px;
-  background-color: var(--accent);
-  transition: width 0.4s ease;
+.score-pill.right {
+  color: #065f46;
+  background-color: #d1fae5;
+  border-color: #6ee7b7;
 }
 
-.bar-value {
-  font-size: 0.9rem;
-  font-variant-numeric: tabular-nums;
+.score-pill.wrong {
+  color: #991b1b;
+  background-color: #fee2e2;
+  border-color: #fca5a5;
 }
-
-/* ------------------------------------------------------------------
-   Trivia Cards (HW 11/12)
-   ------------------------------------------------------------------ */
 
 #api-output {
   display: flex;
@@ -217,16 +49,25 @@ code {
 
 .question-card {
   background-color: var(--card);
-  border: 1px solid var(--line);
+  border: 2px solid var(--line);
   border-radius: var(--radius);
   padding: 1.5rem;
-  box-shadow: 0 4px 10px rgba(0, 73, 94, 0.06);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  margin-bottom: 0;
+  box-shadow: 0 6px 14px rgba(0, 73, 94, 0.08);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.2s ease;
 }
 
 .question-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 18px rgba(0, 73, 94, 0.1);
+  box-shadow: 0 10px 20px rgba(0, 73, 94, 0.12);
+}
+
+.question-card.card-right {
+  border-color: #10b981;
+}
+
+.question-card.card-wrong {
+  border-color: #ef4444;
 }
 
 .card-badge {
@@ -239,7 +80,7 @@ code {
   background-color: var(--accent);
   padding: 0.2rem 0.65rem;
   border-radius: 999px;
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.65rem;
 }
 
 .question-card h3 {
@@ -247,48 +88,61 @@ code {
   font-size: 1.15rem;
 }
 
-.answer-list {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1rem 0;
+.answer-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 0.65rem;
 }
 
-.answer-list li {
-  background-color: #ffffff;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 0.6rem 0.9rem;
+.answer-btn {
+  font: inherit;
   font-size: 0.95rem;
+  text-align: left;
   color: var(--ink);
-}
-
-details {
-  border-top: 1px solid var(--line);
-  padding-top: 0.75rem;
-}
-
-details summary {
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: var(--accent-dark);
-  user-select: none;
-}
-
-details summary:hover {
-  color: var(--ink);
-}
-
-details p {
-  margin: 0.5rem 0 0 0;
-  padding: 0.5rem 0.75rem;
   background-color: #ffffff;
-  border-left: 4px solid var(--accent-dark);
-  border-radius: 4px;
-  color: var(--ink);
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  padding: 0.65rem 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.answer-btn:hover:not(:disabled) {
+  background-color: #f3e8ff;
+  border-color: var(--accent-dark);
+}
+
+.answer-btn:disabled {
+  cursor: default;
+}
+
+.answer-btn.is-correct {
+  background-color: #d1fae5;
+  border-color: #10b981;
+  color: #065f46;
+  font-weight: 700;
+}
+
+.answer-btn.is-wrong {
+  background-color: #fee2e2;
+  border-color: #ef4444;
+  color: #991b1b;
+  font-weight: 700;
+}
+
+.feedback-msg {
+  margin: 0.85rem 0 0 0;
+  font-weight: 600;
+  font-size: 0.95rem;
+  min-height: 1.4em;
+}
+
+.text-right {
+  color: #065f46;
+}
+
+.text-wrong {
+  color: #991b1b;
 }
 
 .error {
@@ -297,23 +151,4 @@ details p {
   border: 1px solid #fecaca;
   padding: 1rem;
   border-radius: var(--radius);
-}
-
-/* ------------------------------------------------------------------
-   Small screens
-   ------------------------------------------------------------------ */
-
-@media (max-width: 480px) {
-  body {
-    font-size: 16px;
-    padding: 1.5rem 1rem 2rem;
-  }
-
-  h1 {
-    font-size: 1.7rem;
-  }
-
-  .bar-row {
-    grid-template-columns: 72px 1fr 36px;
-  }
 }
