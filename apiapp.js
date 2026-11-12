@@ -1,5 +1,6 @@
 // #region Configuration & DOM References
 const API_URL = 'https://opentdb.com';
+const CACHE_KEY = 'mythology_trivia_cache_v1';
 
 const outputContainer = document.getElementById('api-output');
 const rightCountEl = document.getElementById('right-count');
@@ -7,27 +8,18 @@ const wrongCountEl = document.getElementById('wrong-count');
 const answeredCountEl = document.getElementById('answered-count');
 const reloadBtn = document.getElementById('reload-btn');
 
-// Score tracking state
 let rightScore = 0;
 let wrongScore = 0;
 let answeredCount = 0;
 // #endregion
 
 // #region Helper Functions
-/**
- * Decodes HTML entities (e.g., &quot;, &#039;) returned by Open Trivia DB.
- * @param {string} html - Raw string from API
- * @returns {string} Clean readable text
- */
 function decodeHTML(html) {
   const txt = document.createElement('textarea');
   txt.innerHTML = html;
   return txt.value;
 }
 
-/**
- * Resets score counters and updates the scoreboard UI.
- */
 function resetScoreboard() {
   rightScore = 0;
   wrongScore = 0;
@@ -35,27 +27,71 @@ function resetScoreboard() {
   updateScoreboard();
 }
 
-/**
- * Updates the Right, Wrong, and Answered numbers on screen.
- */
 function updateScoreboard() {
   rightCountEl.textContent = rightScore;
   wrongCountEl.textContent = wrongScore;
   answeredCountEl.textContent = answeredCount;
 }
+
+/**
+ * Prevents hitting Open Trivia DB's 5-second rate limit (HTTP 429)
+ * when clicking "Load New Questions".
+ */
+function startButtonCooldown(seconds = 5) {
+  let remaining = seconds;
+  reloadBtn.disabled = true;
+  reloadBtn.textContent = `Wait ${remaining}s...`;
+
+  const timer = setInterval(() => {
+    remaining--;
+    if (remaining > 0) {
+      reloadBtn.textContent = `Wait ${remaining}s...`;
+    } else {
+      clearInterval(timer);
+      reloadBtn.disabled = false;
+      reloadBtn.textContent = 'Load New Questions';
+    }
+  }, 1000);
+}
 // #endregion
 
 // #region API Fetch Logic
 /**
- * Fetches 10 trivia questions from Open Trivia DB and renders them as interactive cards.
+ * Loads trivia questions from sessionStorage cache for instant display,
+ * or fetches fresh questions from Open Trivia DB with a 10-second timeout.
+ * @param {boolean} forceRefresh - Skip cache and fetch brand-new questions
  */
-async function fetchTriviaQuestions() {
+async function fetchTriviaQuestions(forceRefresh = false) {
   resetScoreboard();
-  outputContainer.innerHTML = '<div class="card"><p>Loading trivia questions...</p></div>';
+
+  // 1. Load instantly from session cache if available and not forcing new questions
+  if (!forceRefresh) {
+    const cached = sessionStorage.getItem(CACHE_KEY);
+    if (cached) {
+      try {
+        const parsedQuestions = JSON.parse(cached);
+        renderQuestions(parsedQuestions);
+        return;
+      } catch (e) {
+        sessionStorage.removeItem(CACHE_KEY);
+      }
+    }
+  }
+
+  outputContainer.innerHTML = '<div class="card"><p>Fetching 10 Mythology questions...</p></div>';
   reloadBtn.disabled = true;
 
+  // 2. Set a 10-second timeout so the page never hangs indefinitely
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 10000);
+
   try {
-    const response = await fetch(API_URL);
+    const response = await fetch(API_URL, { signal: controller.signal });
+    clearTimeout(timeoutId);
+
+    if (response.status === 429) {
+      throw new Error('Too many requests! Open Trivia DB requires a 5-second pause between fetches.');
+    }
 
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
@@ -67,39 +103,40 @@ async function fetchTriviaQuestions() {
       throw new Error(`API returned response code: ${data.response_code}`);
     }
 
+    // Save to sessionStorage so subsequent page visits load instantaneously
+    sessionStorage.setItem(CACHE_KEY, JSON.stringify(data.results));
+
     renderQuestions(data.results);
+    startButtonCooldown(5);
 
   } catch (error) {
-    outputContainer.innerHTML = `<p class="error">Failed to load trivia: ${error.message}</p>`;
-    console.error('Trivia API Error:', error);
-  } finally {
+    clearTimeout(timeoutId);
+    const message = error.name === 'AbortError'
+      ? 'The trivia server took too long to respond (timed out after 10s). Click "Load New Questions" to try again.'
+      : error.message;
+
+    outputContainer.innerHTML = `<div class="card"><p class="error">${message}</p></div>`;
     reloadBtn.disabled = false;
+    reloadBtn.textContent = 'Load New Questions';
+    console.error('Trivia API Error:', error);
   }
 }
 // #endregion
 
 // #region Interactive Card Rendering
-/**
- * Builds interactive question cards with clickable answer buttons.
- * @param {Array} questions - Array of question objects from Open Trivia DB
- */
 function renderQuestions(questions) {
   outputContainer.innerHTML = '';
 
   questions.forEach((item, index) => {
-    // Create the card container using both .card and .question-card
     const card = document.createElement('section');
     card.className = 'card question-card';
 
-    // Decode question and answers cleanly
     const questionText = decodeHTML(item.question);
     const correctText = decodeHTML(item.correct_answer);
     const allAnswers = [...item.incorrect_answers.map(decodeHTML), correctText];
 
-    // Shuffle answer order
     allAnswers.sort(() => Math.random() - 0.5);
 
-    // Card header badge and question title
     card.innerHTML = `
       <span class="card-badge">Question ${index + 1} of ${questions.length}</span>
       <h3>${questionText}</h3>
@@ -110,7 +147,6 @@ function renderQuestions(questions) {
     const answerGrid = card.querySelector('.answer-grid');
     const feedbackMsg = card.querySelector('.feedback-msg');
 
-    // Create a clickable button for each answer choice
     allAnswers.forEach(answerText => {
       const btn = document.createElement('button');
       btn.type = 'button';
@@ -118,7 +154,6 @@ function renderQuestions(questions) {
       btn.textContent = answerText;
 
       btn.addEventListener('click', () => {
-        // Prevent answering the same card twice
         if (card.dataset.answered === 'true') return;
         card.dataset.answered = 'true';
         answeredCount++;
@@ -126,7 +161,6 @@ function renderQuestions(questions) {
         const isCorrect = answerText === correctText;
         const allButtons = answerGrid.querySelectorAll('.answer-btn');
 
-        // Disable all buttons on this card and reveal the correct one
         allButtons.forEach(b => {
           b.disabled = true;
           if (b.textContent === correctText) {
@@ -159,8 +193,8 @@ function renderQuestions(questions) {
 // #endregion
 
 // #region Event Listeners & Initialization
-reloadBtn.addEventListener('click', fetchTriviaQuestions);
+reloadBtn.addEventListener('click', () => fetchTriviaQuestions(true));
 
-// Automatically load questions when HW1112.html opens
-fetchTriviaQuestions();
+// Load cached questions immediately if available, or fetch from API
+fetchTriviaQuestions(false);
 // #endregion
