@@ -5,23 +5,31 @@ a trivia game -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Document metadata and responsive viewport setup -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mythology Trivia</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>HW 11/12 - Mythology Trivia</title>
+
+  <!-- Link unified project stylesheet -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Load JavaScript after HTML finishes parsing -->
   <script src="apiapp.js" defer></script>
 </head>
 <body>
 
+  <!-- Navigation back to the main index page -->
   <nav>
-    <a href="index.html">Back to Homepage</a>
+    <a href="index.html">&larr; Back to Home</a>
   </nav>
 
-  <header>
+  <!-- Page title and description -->
+  <header class="site-header">
     <h1>Mythology Trivia (Medium)</h1>
-    <p>10 multiple-choice questions loaded automatically from Open Trivia DB.</p>
+    <p class="subtitle">10 multiple-choice questions loaded automatically from Open Trivia DB.</p>
   </header>
 
+  <!-- Main content area where API data will be injected -->
   <main>
     <div id="api-output" aria-live="polite">
       <p>Loading trivia questions...</p>
