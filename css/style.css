@@ -37,6 +37,7 @@ body {
 }
 
 /* Keep the content from stretching too wide on large monitors. */
+nav,
 header,
 main,
 footer {
@@ -45,7 +46,22 @@ footer {
   margin-right: auto;
 }
 
-h1, h2 {
+nav {
+  margin-bottom: 1.25rem;
+}
+
+nav a {
+  text-decoration: none;
+  color: var(--ink-muted);
+  font-weight: 600;
+}
+
+nav a:hover {
+  color: var(--accent-dark);
+  text-decoration: underline;
+}
+
+h1, h2, h3 {
   line-height: 1.25;
   margin-top: 0;
   color: #217896;
@@ -62,7 +78,7 @@ h2 {
 code {
   font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   font-size: 0.88em;
-  background-color: #CEB6FA;
+  background-color: var(--accent);
   padding: 0.12em 0.4em;
   border-radius: 4px;
 }
@@ -124,10 +140,11 @@ code {
 
 .button:hover {
   background-color: var(--accent-dark);
+  color: #ffffff;
 }
 
 .button-secondary {
-  color: var(--accent);
+  color: var(--accent-dark);
   background-color: transparent;
   border: 1px solid var(--accent);
 }
@@ -150,9 +167,6 @@ code {
 
 /* ------------------------------------------------------------------
    Bar chart
-
-   Each row is a grid: a fixed-width label, then the bar, then the value.
-   The bar's WIDTH is set by JavaScript as an inline style.
    ------------------------------------------------------------------ */
 
 .chart-controls {
@@ -183,13 +197,106 @@ code {
   height: 22px;
   border-radius: 3px;
   background-color: var(--accent);
-  /* Animate width changes so re-sorting feels smooth. */
   transition: width 0.4s ease;
 }
 
 .bar-value {
   font-size: 0.9rem;
   font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------------
+   Trivia Cards (HW 11/12)
+   ------------------------------------------------------------------ */
+
+#api-output {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.question-card {
+  background-color: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: 0 4px 10px rgba(0, 73, 94, 0.06);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.question-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0, 73, 94, 0.1);
+}
+
+.card-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink);
+  background-color: var(--accent);
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  margin-bottom: 0.6rem;
+}
+
+.question-card h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.15rem;
+}
+
+.answer-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0.65rem;
+}
+
+.answer-list li {
+  background-color: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+
+details {
+  border-top: 1px solid var(--line);
+  padding-top: 0.75rem;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--accent-dark);
+  user-select: none;
+}
+
+details summary:hover {
+  color: var(--ink);
+}
+
+details p {
+  margin: 0.5rem 0 0 0;
+  padding: 0.5rem 0.75rem;
+  background-color: #ffffff;
+  border-left: 4px solid var(--accent-dark);
+  border-radius: 4px;
+  color: var(--ink);
+}
+
+.error {
+  color: #b91c1c;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  padding: 1rem;
+  border-radius: var(--radius);
 }
 
 /* ------------------------------------------------------------------
@@ -210,144 +317,3 @@ code {
     grid-template-columns: 72px 1fr 36px;
   }
 }
-
-/* #region Base Page Styles */
-* {
-  box-sizing: border-box;
-}
-
-body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background-color: #f0f2f5;
-  color: #1f2937;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
-  line-height: 1.6;
-}
-
-nav {
-  margin-bottom: 1.5rem;
-}
-
-nav a {
-  text-decoration: none;
-  color: #2563eb;
-  font-weight: 600;
-}
-
-nav a:hover {
-  text-decoration: underline;
-}
-
-header {
-  margin-bottom: 2rem;
-}
-
-header h1 {
-  margin: 0 0 0.25rem 0;
-  font-size: 1.85rem;
-}
-
-header p {
-  margin: 0;
-  color: #4b5563;
-}
-/* #endregion */
-
-/* #region Card Container & Individual Cards */
-#api-output {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.question-card {
-  background-color: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07),
-              0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.question-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-              0 4px 6px -4px rgba(0, 0, 0, 0.06);
-}
-
-/* Question header badge + title */
-.card-badge {
-  display: inline-block;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #2563eb;
-  background-color: #eff6ff;
-  padding: 0.2rem 0.6rem;
-  border-radius: 999px;
-  margin-bottom: 0.6rem;
-}
-
-.question-card h3 {
-  margin: 0 0 1rem 0;
-  font-size: 1.15rem;
-  color: #111827;
-}
-/* #endregion */
-
-/* #region Answer Choices & Reveal Footer */
-.answer-list {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1rem 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 0.65rem;
-}
-
-.answer-list li {
-  background-color: #f9fafb;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  padding: 0.6rem 0.9rem;
-  font-size: 0.95rem;
-}
-
-details {
-  border-top: 1px solid #f3f4f6;
-  padding-top: 0.75rem;
-}
-
-details summary {
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: #2563eb;
-  user-select: none;
-}
-
-details summary:hover {
-  color: #1d4ed8;
-}
-
-details p {
-  margin: 0.5rem 0 0 0;
-  padding: 0.5rem 0.75rem;
-  background-color: #ecfdf5;
-  border-left: 4px solid #10b981;
-  border-radius: 4px;
-  color: #065f46;
-}
-
-.error {
-  color: #b91c1c;
-  background-color: #fef2f2;
-  border: 1px solid #fecaca;
-  padding: 1rem;
-  border-radius: 8px;
-}
-/* #endregion */
