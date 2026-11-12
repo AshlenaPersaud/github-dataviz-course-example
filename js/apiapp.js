@@ -1,6 +1,6 @@
 // #region Configuration & DOM References
 // Open Trivia DB Mythology endpoint (10 medium multiple-choice questions)
-const API_URL = 'https://opentdb.com';
+const API_URL = 'https://opentdb.com/api.php?amount=10&category=20&difficulty=medium&type=multiple';
 
 const outputContainer = document.getElementById('api-output');
 const rightCountEl = document.getElementById('right-count');
