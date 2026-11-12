@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HW 11/12 - Mythology Trivia</title>
+  <title>HW 11/12 - Trivia Quiz</title>
 
   <!-- Points to css/style.css -->
   <link rel="stylesheet" href="css/style.css">
@@ -18,19 +18,34 @@
   </nav>
 
   <header class="site-header">
-    <h1>How well do you know your Mythology?</h1>
-    <p class="subtitle">A couple questions to test your knowledge..</p>
+    <h1>How well do you know your Trivia?</h1>
+    <p class="subtitle">Pick a category and click an answer on each card to test your knowledge.</p>
   </header>
 
   <main>
-    <!-- Live Scoreboard Card -->
+    <!-- Live Scoreboard & Category Controls Card -->
     <section class="card scoreboard" aria-live="polite">
       <div class="score-stats">
         <span class="score-pill right">Right: <strong id="right-count">0</strong></span>
         <span class="score-pill wrong">Wrong: <strong id="wrong-count">0</strong></span>
         <span class="score-pill total">Answered: <strong id="answered-count">0</strong> / 10</span>
       </div>
-      <button id="reload-btn" class="button" type="button">Load New Questions</button>
+
+      <div class="quiz-controls">
+        <label for="category-select" class="sr-only">Category</label>
+        <select id="category-select" class="category-select">
+          <option value="20" selected>Mythology</option>
+          <option value="9">General Knowledge</option>
+          <option value="17">Science &amp; Nature</option>
+          <option value="23">History</option>
+          <option value="22">Geography</option>
+          <option value="25">Art</option>
+          <option value="11">Film</option>
+          <option value="12">Music</option>
+        </select>
+
+        <button id="reload-btn" class="button" type="button">Load New Questions</button>
+      </div>
     </section>
 
     <!-- Container where question cards are injected -->
